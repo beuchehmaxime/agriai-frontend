@@ -1,0 +1,14 @@
+app/diagnosis/result.tsx(47,31): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: ViewProps): View', gave the following error.
+    Type '{ key: number; className: string; }' is not assignable to type 'ViewProps'.
+      Property 'key' does not exist on type 'ViewProps'.
+  Overload 2 of 2, '(props: ViewProps, context: any): View', gave the following error.
+    Type '{ key: number; className: string; }' is not assignable to type 'ViewProps'.
+      Property 'key' does not exist on type 'ViewProps'.
+app/diagnosis/result.tsx(57,31): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(props: ViewProps): View', gave the following error.
+    Type '{ key: number; className: string; }' is not assignable to type 'ViewProps'.
+      Property 'key' does not exist on type 'ViewProps'.
+  Overload 2 of 2, '(props: ViewProps, context: any): View', gave the following error.
+    Type '{ key: number; className: string; }' is not assignable to type 'ViewProps'.
+      Property 'key' does not exist on type 'ViewProps'.
