@@ -3,12 +3,11 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDiagnosisHistory, useDeleteDiagnosis } from '../../hooks/useDiagnosis';
 import { DiagnosisLocal } from '../../types';
-import FullScreenLoader from '../../components/FullScreenLoader';
 
 export default function HistoryScreen() {
     const router = useRouter();
     const { data: diagnoses, isLoading, isFetching, refetch } = useDiagnosisHistory();
-    const { mutate: deleteMutation, isPending: isDeleting } = useDeleteDiagnosis();
+    const { mutate: deleteMutation } = useDeleteDiagnosis();
 
 
 
@@ -44,7 +43,7 @@ export default function HistoryScreen() {
                         </Text>
                     </View>
                 </View>
-                <Text className="text-gray-500 text-sm mt-1">{item.crop} • {Math.round(item.confidence * 100)}% Match</Text>
+                <Text className="text-gray-500 text-sm capitalize mt-1">{item.crop} • {Math.round(item.confidence * 100)}% Match</Text>
                 <Text className="text-gray-400 text-xs mt-2">{new Date(item.createdAt).toLocaleDateString()}</Text>
                 <Text className="text-gray-300 text-[10px] mt-1 italic">Long-press to delete</Text>
             </View>
@@ -68,7 +67,6 @@ export default function HistoryScreen() {
                     </View>
                 }
             />
-            <FullScreenLoader visible={isDeleting} message="Deleting..." />
         </SafeAreaView>
     );
 }

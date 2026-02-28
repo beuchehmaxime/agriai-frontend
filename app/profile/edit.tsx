@@ -6,6 +6,8 @@ import { useRouter } from 'expo-router';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { UserPen } from 'lucide-react-native';
+import { useUpdateProfile } from '../../hooks/useUser';
+import FullScreenLoader from '../../components/FullScreenLoader';
 
 export default function EditProfileScreen() {
     const { phoneNumber, setUser, userId, token, name, email, userType } = useUserStore();
@@ -15,34 +17,15 @@ export default function EditProfileScreen() {
         name: name || '',
         email: email || '',
     });
-    const [loading, setLoading] = useState(false);
+    const { mutate: updateProfile, isPending: loading } = useUpdateProfile();
 
-    const handleUpdate = async () => {
-        if (!formData.name || !formData.email) {
-            Alert.alert('Missing Fields', 'Please fill in name and email.');
+    const handleUpdate = () => {
+        if (!formData.name && !formData.email) {
+            Alert.alert('Missing Fields', 'Please fill in at least a name or email.');
             return;
         }
 
-        setLoading(true);
-        try {
-            if (userId) {
-                await setUser({
-                    userId,
-                    phoneNumber: phoneNumber || '',
-                    token: token || '',
-                    userType: userType as 'guest' | 'farmer',
-                    name: formData.name,
-                    email: formData.email
-                });
-                Alert.alert('Success', 'Profile updated successfully.');
-                router.back();
-            }
-        } catch (error) {
-            console.error(error);
-            Alert.alert('Error', 'Failed to update profile.');
-        } finally {
-            setLoading(false);
-        }
+        updateProfile(formData);
     };
 
     return (
@@ -85,10 +68,12 @@ export default function EditProfileScreen() {
                             title="Save Changes"
                             onPress={handleUpdate}
                             loading={loading}
+                            disabled={loading}
                         />
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+            <FullScreenLoader visible={loading} message="Saving Profile..." />
         </SafeAreaView>
     );
 }

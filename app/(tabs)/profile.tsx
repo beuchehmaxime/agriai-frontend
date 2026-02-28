@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserStore } from '../../store/userStore';
 import { useRouter } from 'expo-router';
+import { useQueryClient } from '@tanstack/react-query';
 import Button from '../../components/Button';
 import { LogOut, User, Settings, Shield, HelpCircle, Phone, UserPen, ChevronRight, RefreshCcw, Lock } from 'lucide-react-native';
 import { useNetwork } from '../../context/NetworkContext';
@@ -11,6 +12,7 @@ import { MenuItemProps } from '../../types';
 export default function ProfileScreen() {
     const { phoneNumber, userType, logout, name, email, resetApp } = useUserStore();
     const router = useRouter();
+    const queryClient = useQueryClient();
     const { isConnected } = useNetwork();
 
     if (!isConnected) {
@@ -59,6 +61,7 @@ export default function ProfileScreen() {
                 <TouchableOpacity
                     onPress={async () => {
                         await logout();
+                        queryClient.clear();
                         router.replace('/auth/welcome');
                     }}
                     className="mt-4 p-4"
@@ -85,6 +88,7 @@ export default function ProfileScreen() {
                 style: 'destructive',
                 onPress: async () => {
                     await logout();
+                    queryClient.clear();
                     router.replace('/auth/welcome');
                 }
             }

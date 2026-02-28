@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { getUserSession, saveUserSection, getSavedPhone, saveSavedPhone, saveProfile, resetDatabase } from '../services/database';
+import { getUserSession, saveUserSection, getSavedPhone, saveSavedPhone, saveProfile, resetDatabase, clearUserSession } from '../services/database';
 
 interface UserState {
     userId: string | null;
@@ -59,7 +59,7 @@ export const useUserStore = create<UserState>((set) => ({
 
     logout: async () => {
         set({ userId: null, phoneNumber: null, token: null, userType: null, name: null, email: null });
-        // Clear from DB ideally
+        await clearUserSession();
     },
 
     resetApp: async () => {

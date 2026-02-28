@@ -126,13 +126,33 @@ export const useDeleteDiagnosis = () => {
             // Delete locally regardless
             await deleteDiagnosis(item.id);
         },
-        onSuccess: () => {
-            // Re-fetch history to update UI instantly
-            queryClient.invalidateQueries({ queryKey: ['history'] });
+        onMutate: async (item: any) => {
+            // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+            await queryClient.cancelQueries({ queryKey: ['history', isConnected, token] });
+
+            // Snapshot the previous value
+            const previousHistory = queryClient.getQueryData(['history', isConnected, token]);
+
+            // Optimistically update to the new value
+            queryClient.setQueryData(['history', isConnected, token], (old: any) => {
+                if (!old) return [];
+                return old.filter((d: any) => d.id !== item.id);
+            });
+
+            // Return a context with the previous history
+            return { previousHistory };
         },
-        onError: (error) => {
+        onError: (error, item, context: any) => {
+            // If the mutation fails, use the context returned from onMutate to roll back
+            if (context?.previousHistory) {
+                queryClient.setQueryData(['history', isConnected, token], context.previousHistory);
+            }
             console.error('Delete failed:', error);
-            Alert.alert('Error', 'Failed to delete diagnosis from server. Please try again.');
+            Alert.alert('Error', 'Failed to delete diagnosis. Please try again.');
+        },
+        onSettled: () => {
+            // Always refetch after error or success to ensure data consistency
+            queryClient.invalidateQueries({ queryKey: ['history'] });
         }
     });
 };

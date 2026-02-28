@@ -123,7 +123,7 @@ export default function HomeScreen() {
                                     />
                                     <View>
                                         <Text className="font-bold text-gray-800">{item.disease}</Text>
-                                        <Text className="text-gray-500 text-sm mt-1">{item.crop} --- {Math.round(item.confidence * 100)}% Match</Text>
+                                        <Text className="text-gray-500 capitalize text-sm mt-1">{item.crop} --- {Math.round(item.confidence * 100)}% Match</Text>
                                         <Text className="text-gray-500 text-xs">{new Date(item.createdAt).toLocaleDateString()}</Text>
                                     </View>
                                 </View>

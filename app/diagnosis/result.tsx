@@ -36,7 +36,7 @@ export default function ResultScreen() {
 
                 <View className="p-6 -mt-6 bg-white rounded-t-3xl min-h-screen">
                     <View className="flex-row items-center justify-between mb-2">
-                        <Text className="text-green-600 font-bold tracking-widest uppercase text-xs">{data.crop}</Text>
+                        <Text className="text-green-600 font-bold tracking-widest capitalize text-xs">{data.crop}</Text>
                         <View className="bg-green-100 px-3 py-1 rounded-full">
                             <Text className="text-green-700 text-xs font-bold">{Math.round(data.confidence * 100)}% Confidence</Text>
                         </View>

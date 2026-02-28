@@ -63,6 +63,12 @@ export const getUserSession = async () => {
     return await db.getFirstAsync<{ userId: string, phoneNumber: string, token: string, userType: string, name: string, email: string }>('SELECT * FROM users LIMIT 1');
 }
 
+export const clearUserSession = async () => {
+    await db.runAsync('DELETE FROM users');
+    await db.runAsync('DELETE FROM profiles');
+    await db.runAsync('DELETE FROM diagnoses'); // Clear cached history for privacy
+}
+
 export const getSavedPhone = async () => {
     const row = await db.getFirstAsync<{ value: string }>('SELECT value FROM settings WHERE key = ?', 'last_phone');
     return row?.value || null;
