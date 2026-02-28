@@ -79,3 +79,45 @@ export interface MenuItemProps {
     onPress: () => void;
     color?: string;
 }
+
+export interface Category {
+    id: string;
+    name: string;
+    description: string | null;
+}
+
+export interface Product {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    stockQuantity: number;
+    imageUrl: string | null;
+    diseaseTags: string[];
+    categoryId: string;
+    adminId: string;
+    category?: Category;
+}
+
+export interface CartItem {
+    product: Product;
+    quantity: number;
+}
+
+export interface OrderItem {
+    id: string;
+    productId: string;
+    quantity: number;
+    price: number;
+    product?: Product;
+}
+
+export interface Order {
+    id: string;
+    userId: string;
+    totalAmount: number;
+    status: 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+    items: OrderItem[];
+    createdAt: string;
+    updatedAt: string;
+}

@@ -62,21 +62,21 @@ export default function ResultScreen() {
                             {data.advice}
                         </Markdown>
                     </View>
-                   
-                   <View className='flex-row justify-between gap-2'>
-                    <Button
-                        title="Buy Treatment"
-                        onPress={() => router.navigate('/(tabs)/shop')}
-                        className="mt-2 mb-2 bg-white w-1/2"
-                        variant='yellow'
-                    />
-                     <Button
-                        title="Consult Expert"
-                        onPress={() => router.navigate('/(tabs)/shop')}
-                        className="mt-2 mb-2 bg-white w-1/2"
-                        variant='outline'
-                    />
-                   </View>
+
+                    <View className='flex-row justify-between gap-2'>
+                        <Button
+                            title="Buy Treatment"
+                            onPress={() => router.navigate({ pathname: '/(tabs)/shop', params: { disease: data.disease } })}
+                            className="mt-2 mb-2 bg-white w-1/2"
+                            variant='yellow'
+                        />
+                        <Button
+                            title="Consult Expert"
+                            onPress={() => router.navigate('/(tabs)/shop')}
+                            className="mt-2 mb-2 bg-white w-1/2"
+                            variant='outline'
+                        />
+                    </View>
                 </View>
             </ScrollView >
         </SafeAreaView >

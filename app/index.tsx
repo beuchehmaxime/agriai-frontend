@@ -25,7 +25,7 @@ export default function Index() {
                 } else {
                     router.replace('/auth/welcome');
                 }
-            }, 5000);
+            }, 10);
 
             return () => clearTimeout(timer);
         }

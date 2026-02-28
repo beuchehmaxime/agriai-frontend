@@ -140,7 +140,7 @@ export default function ProfileScreen() {
                     <MenuItem icon={Settings} label="Settings" onPress={() => { }} />
                     <MenuItem icon={Shield} label="Privacy Policy" onPress={() => { }} />
                     <MenuItem icon={HelpCircle} label="Help & Support" onPress={() => { }} />
-                    <MenuItem icon={RefreshCcw} label="Reset Application" onPress={handleReset} color="#F97316" />
+                    {/* <MenuItem icon={RefreshCcw} label="Reset Application" onPress={handleReset} color="#F97316" /> */}
                     <MenuItem icon={LogOut} label="Logout" onPress={handleLogout} color="#EF4444" />
                 </View>
             </ScrollView>

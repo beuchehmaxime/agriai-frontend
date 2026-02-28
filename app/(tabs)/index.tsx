@@ -1,7 +1,8 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserStore } from '../../store/userStore';
-import { Bell, CloudSun, BookOpen, Users, ChevronRight, Sprout, User2, MapPin, UserRoundPen, ShoppingBag } from 'lucide-react-native';
+import { useCartStore } from '../../store/useCartStore';
+import { Bell, CloudSun, BookOpen, Users, ChevronRight, Sprout, User2, MapPin, UserRoundPen, ShoppingBag, PackageOpen } from 'lucide-react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { DiagnosisLocal, QuickAccessItemProps } from '../../types';
 import { useDiagnosisHistory } from '../../hooks/useDiagnosis';
@@ -11,6 +12,7 @@ export default function HomeScreen() {
     const router = useRouter();
     const { data: diagnoses } = useDiagnosisHistory();
     const recentDiagnoses = diagnoses ? diagnoses.slice(0, 3) : [];
+    const cartItemsCount = useCartStore((state) => state.getTotalItems());
 
     const QuickAccessItem = ({ icon: Icon, label, color, onPress }: QuickAccessItemProps) => (
         <TouchableOpacity onPress={onPress} className="items-center bg-white p-4 rounded-2xl shadow-sm w-[30%] mb-4">
@@ -40,10 +42,15 @@ export default function HomeScreen() {
                             <Bell color="#374151" size={24} />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => router.push('/shop')}
-                            className="p-2 bg-white rounded-full shadow-sm"
+                            onPress={() => router.push('/shop/cart')}
+                            className="p-2 bg-white rounded-full shadow-sm relative"
                         >
                             <ShoppingBag color="#374151" size={24} />
+                            {cartItemsCount > 0 && (
+                                <View className="absolute -top-1 -right-1 bg-primary w-5 h-5 rounded-full items-center justify-center border-2 border-white z-10">
+                                    <Text className="text-white text-[10px] font-bold">{cartItemsCount}</Text>
+                                </View>
+                            )}
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -96,6 +103,12 @@ export default function HomeScreen() {
                             label="Community"
                             color="bg-purple-500"
                             onPress={() => router.push('/community')}
+                        />
+                        <QuickAccessItem
+                            icon={PackageOpen}
+                            label="Orders"
+                            color="bg-orange-500"
+                            onPress={() => router.push('/shop/orders')}
                         />
                     </View>
                 </View>
