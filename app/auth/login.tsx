@@ -3,82 +3,31 @@ import { View, Text, Alert, KeyboardAvoidingView, Platform, ScrollView, Touchabl
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserStore } from '../../store/userStore';
 import { useRouter } from 'expo-router';
-import * as Network from 'expo-network';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { Sprout, Lock, Globe } from 'lucide-react-native';
-import api, { AuthService, getErrorMessage } from '../../services/api';
+import { Sprout, Globe } from 'lucide-react-native';
 import { useNetwork } from '@/context/NetworkContext';
 import IsOffline from '@/components/IsOffline';
+import { useLogin } from '@/hooks/useAuth';
+import FullScreenLoader from '@/components/FullScreenLoader';
 
 export default function LoginScreen() {
-    const { setUser } = useUserStore();
     const router = useRouter();
+    const { mutate: login, isPending: loading } = useLogin();
 
     const [formData, setFormData] = useState({
         phoneNumber: '',
         password: ''
     });
-    const [loading, setLoading] = useState(false);
 
-    const handleLogin = async () => {
+    const handleLogin = () => {
         // 1. Validation
         if (!formData.phoneNumber || !formData.password) {
             Alert.alert('Missing Fields', 'Please enter both phone number and password.');
             return;
         }
 
-        setLoading(true);
-
-        try {
-            // 2. Connectivity Check
-            const networkState = await Network.getNetworkStateAsync();
-            const isOnline = networkState.isConnected && networkState.isInternetReachable;
-
-            if (!isOnline) {
-                Alert.alert('Offline', 'You must be connected to the internet to login.');
-                setLoading(false);
-                return;
-            }
-
-            // 3. API Call
-            console.log('Logging in:', formData.phoneNumber);
-
-            const response = await AuthService.login(formData.phoneNumber, formData.password);
-
-            if (!response.success) {
-                throw new Error(response.message || 'Login failed');
-            }
-
-            const { user, token } = response.data;
-
-            console.log('Login User Data:', user);
-
-            // Normalize userType
-            const normalizedUserType = (user.userType || '').toLowerCase();
-            const validUserType = (normalizedUserType === 'farmer' || normalizedUserType === 'guest')
-                ? normalizedUserType
-                : 'guest';
-
-            // 4. Update Store
-            await setUser({
-                userId: user.id, // Mapping id -> userId
-                phoneNumber: user.phoneNumber,
-                token: token,
-                userType: validUserType as 'guest' | 'farmer',
-                name: user.name,
-                email: user.email
-            });
-
-            router.replace('/(tabs)');
-        } catch (error: any) {
-            console.error('Login Error:', error);
-
-            const errorMessage = getErrorMessage(error);
-            Alert.alert('Login Failed', errorMessage);
-        } finally {
-            setLoading(false);
-        }
+        login({ phoneNumber: formData.phoneNumber, password: formData.password });
     };
 
     const { isConnected } = useNetwork();
@@ -135,6 +84,7 @@ export default function LoginScreen() {
                             title="Login"
                             onPress={handleLogin}
                             loading={loading}
+                            disabled={loading}
                         />
                         <View className="flex-row justify-center mt-4">
                             <Text className="text-gray-500">Don't have an account? </Text>
@@ -145,6 +95,7 @@ export default function LoginScreen() {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+            <FullScreenLoader visible={loading} message="Signing in..." />
         </SafeAreaView>
     );
 }

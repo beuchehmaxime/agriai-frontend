@@ -1,25 +1,18 @@
-import { View, Text, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
-import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
-import { getDiagnoses, deleteDiagnosis } from '../../services/database';
+import { View, Text, FlatList, TouchableOpacity, Image, Alert, ActivityIndicator, RefreshControl } from 'react-native';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDiagnosisHistory, useDeleteDiagnosis } from '../../hooks/useDiagnosis';
+import { DiagnosisLocal } from '../../types';
+import FullScreenLoader from '../../components/FullScreenLoader';
 
 export default function HistoryScreen() {
-    const [diagnoses, setDiagnoses] = useState<any[]>([]);
     const router = useRouter();
+    const { data: diagnoses, isLoading, isFetching, refetch } = useDiagnosisHistory();
+    const { mutate: deleteMutation, isPending: isDeleting } = useDeleteDiagnosis();
 
-    const loadHistory = async () => {
-        const data = await getDiagnoses();
-        setDiagnoses(data);
-    };
 
-    useFocusEffect(
-        useCallback(() => {
-            loadHistory();
-        }, [])
-    );
 
-    const handleDelete = (item: any) => {
+    const handleDelete = (item: DiagnosisLocal) => {
         Alert.alert(
             'Delete Diagnosis',
             'Are you sure you want to delete this diagnosis? This action cannot be undone.',
@@ -28,21 +21,13 @@ export default function HistoryScreen() {
                 {
                     text: 'Delete',
                     style: 'destructive',
-                    onPress: async () => {
-                        try {
-                            await deleteDiagnosis(item.id);
-                            loadHistory();
-                        } catch (error) {
-                            console.error('Delete failed:', error);
-                            Alert.alert('Error', 'Failed to delete diagnosis.');
-                        }
-                    }
+                    onPress: () => deleteMutation(item)
                 }
             ]
         );
     };
 
-    const renderItem = ({ item }: any) => (
+    const renderItem = ({ item }: { item: DiagnosisLocal }) => (
         <TouchableOpacity
             onPress={() => router.push({ pathname: '/diagnosis/result', params: { result: JSON.stringify(item) } })}
             onLongPress={() => handleDelete(item)}
@@ -68,17 +53,22 @@ export default function HistoryScreen() {
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50 p-4">
-            <Text className="text-2xl font-bold text-gray-900 mb-6">Diagnosis History</Text>
+            <View className="flex-row justify-between items-center mb-6">
+                <Text className="text-2xl font-bold text-gray-900">Diagnosis History</Text>
+                {isLoading && <ActivityIndicator size="small" color="#4ADE80" />}
+            </View>
             <FlatList
-                data={diagnoses}
+                data={diagnoses || []}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id?.toString() || item.createdAt}
+                refreshControl={<RefreshControl refreshing={isFetching && !isLoading} onRefresh={refetch} tintColor="#4ADE80" />}
                 ListEmptyComponent={
                     <View className="items-center justify-center mt-20">
                         <Text className="text-gray-400">No diagnoses yet.</Text>
                     </View>
                 }
             />
+            <FullScreenLoader visible={isDeleting} message="Deleting..." />
         </SafeAreaView>
     );
 }

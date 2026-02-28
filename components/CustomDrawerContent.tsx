@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native';
-import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+import { DrawerContentScrollView, DrawerItemList, DrawerContentComponentProps } from '@react-navigation/drawer';
 import { useRouter } from 'expo-router';
 import { useUserStore } from '../store/userStore';
 import { LogOut, User as UserIcon, Settings, HelpCircle } from 'lucide-react-native';
 
-export default function CustomDrawerContent(props: any) {
+export default function CustomDrawerContent(props: DrawerContentComponentProps) {
     const router = useRouter();
     const { phoneNumber, userType, logout } = useUserStore();
 

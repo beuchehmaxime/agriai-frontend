@@ -3,26 +3,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserStore } from '../../store/userStore';
 import { Bell, CloudSun, BookOpen, Users, ChevronRight, Sprout, User2, MapPin, UserRoundPen, ShoppingBag } from 'lucide-react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
-import { getDiagnoses } from '../../services/database';
-import { useCallback, useState } from 'react';
+import { DiagnosisLocal, QuickAccessItemProps } from '../../types';
+import { useDiagnosisHistory } from '../../hooks/useDiagnosis';
 
 export default function HomeScreen() {
     const { phoneNumber, userType, name } = useUserStore();
     const router = useRouter();
-    const [recentDiagnoses, setRecentDiagnoses] = useState<any[]>([]);
+    const { data: diagnoses } = useDiagnosisHistory();
+    const recentDiagnoses = diagnoses ? diagnoses.slice(0, 3) : [];
 
-    const loadRecent = async () => {
-        const data = await getDiagnoses();
-        setRecentDiagnoses(data.slice(0, 3));
-    };
-
-    useFocusEffect(
-        useCallback(() => {
-            loadRecent();
-        }, [])
-    );
-
-    const QuickAccessItem = ({ icon: Icon, label, color, onPress }: any) => (
+    const QuickAccessItem = ({ icon: Icon, label, color, onPress }: QuickAccessItemProps) => (
         <TouchableOpacity onPress={onPress} className="items-center bg-white p-4 rounded-2xl shadow-sm w-[30%] mb-4">
             <View className={`p-3 rounded-full ${color} mb-2`}>
                 <Icon color="white" size={24} />
@@ -42,20 +32,20 @@ export default function HomeScreen() {
                         </View>
                         <Text className="text-2xl font-black text-gray-900 tracking-tight">AGRI<Text className="text-primary">AI</Text></Text>
                     </View>
-                  <View className="flex-row items-center gap-2">
-                  <TouchableOpacity
-                        onPress={() => router.push('/notifications')}
-                        className="p-2 bg-white rounded-full shadow-sm"
-                    >
-                        <Bell color="#374151" size={24} />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => router.push('/shop')}
-                        className="p-2 bg-white rounded-full shadow-sm"
-                    >
-                        <ShoppingBag color="#374151" size={24} />
-                    </TouchableOpacity>
-                  </View>
+                    <View className="flex-row items-center gap-2">
+                        <TouchableOpacity
+                            onPress={() => router.push('/notifications')}
+                            className="p-2 bg-white rounded-full shadow-sm"
+                        >
+                            <Bell color="#374151" size={24} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => router.push('/shop')}
+                            className="p-2 bg-white rounded-full shadow-sm"
+                        >
+                            <ShoppingBag color="#374151" size={24} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 {/* User Card */}

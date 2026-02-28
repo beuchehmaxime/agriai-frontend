@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import { Diagnosis, DiagnosisLocal } from '../types';
 
 const db = SQLite.openDatabaseSync('agriai.db');
 
@@ -85,7 +86,7 @@ export const getProfileForPhone = async (phoneNumber: string) => {
     );
 };
 
-export const saveDiagnosisLocal = async (diagnosis: any) => {
+export const saveDiagnosisLocal = async (diagnosis: Diagnosis, synced: number = 0) => {
     const crop = diagnosis.crop || diagnosis.cropType;
     // If advice is already a string (from backend), don't double stringify if it's already quoted or just store as is
     // Actually JSON.stringify is fine for strings, it just adds quotes.
@@ -98,15 +99,15 @@ export const saveDiagnosisLocal = async (diagnosis: any) => {
         diagnosis.disease,
         diagnosis.confidence,
         advice,
-        diagnosis.imageUri,
-        0,
+        diagnosis.imageUri || diagnosis.imageUrl || null,
+        synced,
         diagnosis.createdAt || new Date().toISOString()
     );
 };
 
 export const getDiagnoses = async () => {
     const rows = await db.getAllAsync('SELECT * FROM diagnoses ORDER BY createdAt DESC');
-    return rows.map((row: any) => {
+    return rows.map((row: any): DiagnosisLocal => {
         let advice = row.advice;
         try {
             // Try to parse if it's a JSON string (for object style advice)
@@ -125,6 +126,40 @@ export const getDiagnoses = async () => {
 
 export const deleteDiagnosis = async (id: number) => {
     await db.runAsync('DELETE FROM diagnoses WHERE id = ?', id);
+};
+
+export const syncDiagnosesFromBackend = async (diagnoses: Diagnosis[]) => {
+    for (const diagnosis of diagnoses) {
+        const crop = diagnosis.crop || diagnosis.cropType;
+        const advice = typeof diagnosis.advice === 'string' ? diagnosis.advice : JSON.stringify(diagnosis.advice);
+
+        // Extract the actual image URL based on the Prisma relation or fallback to direct imageUrl/imageUri
+        const remoteImageUrl = diagnosis.image?.url || diagnosis.imageUrl || diagnosis.imageUri;
+
+        // We check if the diagnosis already exists based on diagnosisId
+        const existing = await db.getFirstAsync('SELECT id FROM diagnoses WHERE diagnosisId = ?', diagnosis.id);
+
+        if (!existing) {
+            await db.runAsync(
+                'INSERT INTO diagnoses (diagnosisId, crop, disease, confidence, advice, imageUri, synced, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                diagnosis.id,
+                crop,
+                diagnosis.disease,
+                diagnosis.confidence,
+                advice,
+                remoteImageUrl || null,
+                1,
+                diagnosis.createdAt || new Date().toISOString()
+            );
+        } else {
+            // Optionally update existing records if needed. For now, assuming history doesn't change after creation
+            await db.runAsync(
+                'UPDATE diagnoses SET imageUri = ?, synced = 1 WHERE diagnosisId = ?',
+                remoteImageUrl || null,
+                diagnosis.id
+            );
+        }
+    }
 };
 
 export const resetDatabase = async () => {

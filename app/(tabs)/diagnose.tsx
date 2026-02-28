@@ -5,12 +5,12 @@ import { useRouter } from 'expo-router';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import { Camera, ChevronLeft, Image as ImageIcon, X } from 'lucide-react-native';
-import api, { DiagnosisService, getErrorMessage } from '../../services/api';
 import { saveDiagnosisLocal } from '../../services/database';
-import { useMutation } from '@tanstack/react-query';
 
 import { useNetwork } from '../../context/NetworkContext';
 import { useUserStore } from '../../store/userStore';
+import { usePredictDiagnosis } from '../../hooks/useDiagnosis';
+import FullScreenLoader from '../../components/FullScreenLoader';
 
 // ...
 export default function DiagnoseScreen() {
@@ -52,89 +52,23 @@ export default function DiagnoseScreen() {
         }
     };
 
-    const diagnosisMutation = useMutation({
-        mutationFn: async (data: any) => {
-            // Check connectivity and authentication
-            if (isConnected && token) {
-                try {
-                    console.log('Online Mode & Logged In: Sending image to API...');
-
-                    const formData = new FormData();
-
-                    // Handle image for multipart/form-data
-                    const uri = data.image;
-                    const fileName = uri.split('/').pop() || 'photo.jpg';
-                    const match = /\.(\w+)$/.exec(fileName);
-                    const type = match ? `image/${match[1]}` : `image/jpeg`;
-
-                    formData.append('image', {
-                        uri,
-                        name: fileName,
-                        type,
-                    } as any);
-                    formData.append('cropType', data.crop);
-                    if (data.symptoms) formData.append('symptoms', data.symptoms);
-                    if (data.location) formData.append('location', data.location);
-
-                    const response = await DiagnosisService.predict(formData);
-                    // Add imageUri to the response so it can be used in result screen
-                    return {
-                        ...response.data,
-                        diagnosis: {
-                            ...response.data.diagnosis,
-                            imageUri: data.image
-                        }
-                    };
-                } catch (e) {
-                    console.error('Online API failed:', e);
-                    throw e;
-                }
-            } else {
-                console.log('Offline/Guest Mode: Using local model logic');
-
-                // Return dummy data (Offline Model Simulation)
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                return {
-                    diagnosis: {
-                        id: Math.random().toString(),
-                        cropType: data.crop,
-                        disease: 'Fall Armyworm (Offline Prediction)',
-                        confidence: 0.89,
-                        advice: 'Fall Armyworm creates ragged holes in leaves.\n\nTreatment:\n1. Apply neem oil solution.\n2. Use pheromone traps.\n3. Manual removal for small plots.\n\nPrevention:\n- Early planting.\n- Intercropping with legumes.',
-                        imageUri: data.image
-                    }
-                };
-            }
-        },
-        onSuccess: async (data) => {
-            // data is { diagnosis: ... }
-            if (data && data.diagnosis) {
-                await saveDiagnosisLocal(data.diagnosis);
-
-                router.push({
-                    pathname: '/diagnosis/result',
-                    params: {
-                        result: JSON.stringify(data.diagnosis)
-                    }
-                });
-                setImage(null);
-                setCrop('Maize');
-                setSymptoms('');
-            }
-        },
-        onError: (error) => {
-            const errorMessage = getErrorMessage(error);
-            Alert.alert('Error', errorMessage);
-            console.error(error);
-        }
-    });
-
+    const diagnosisMutation = usePredictDiagnosis();
     const handleSubmit = () => {
         if (!image) {
             Alert.alert('Image Required', 'Please provide an image of the crop.');
             return;
         }
-        diagnosisMutation.mutate({ image, crop, symptoms });
+        diagnosisMutation.mutate(
+            { image, crop, symptoms },
+            {
+                onSuccess: () => {
+                    // Reset UI State after successful transition 
+                    setImage(null);
+                    setCrop('Maize');
+                    setSymptoms('');
+                }
+            }
+        );
     };
 
     return (
@@ -194,8 +128,10 @@ export default function DiagnoseScreen() {
                 title="Diagnose"
                 onPress={handleSubmit}
                 loading={diagnosisMutation.isPending}
+                disabled={diagnosisMutation.isPending}
             />
             <View className="h-20" />
+            <FullScreenLoader visible={diagnosisMutation.isPending} message="Analyzing image..." />
         </ScrollView>
     );
 }

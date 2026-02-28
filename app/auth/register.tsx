@@ -3,17 +3,17 @@ import { View, Text, Alert, KeyboardAvoidingView, Platform, ScrollView, Touchabl
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserStore } from '../../store/userStore';
 import { useRouter } from 'expo-router';
-import * as Network from 'expo-network';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
-import { UserPlus, ShieldCheck, Globe } from 'lucide-react-native';
-import api, { AuthService, getErrorMessage } from '../../services/api';
+import { UserPlus } from 'lucide-react-native';
 import { useNetwork } from '@/context/NetworkContext';
 import IsOffline from '@/components/IsOffline';
+import { useRegister } from '@/hooks/useAuth';
+import FullScreenLoader from '@/components/FullScreenLoader';
 
 export default function RegisterScreen() {
-    const { setUser } = useUserStore();
     const router = useRouter();
+    const { mutate: register, isPending: loading } = useRegister();
 
     const [formData, setFormData] = useState({
         name: '',
@@ -22,9 +22,8 @@ export default function RegisterScreen() {
         password: '',
         confirmPassword: ''
     });
-    const [loading, setLoading] = useState(false);
 
-    const handleRegister = async () => {
+    const handleRegister = () => {
         // 1. Validation
         if (!formData.name || !formData.email || !formData.password || !formData.phoneNumber) {
             Alert.alert('Missing Fields', 'Please fill in all required fields.');
@@ -36,65 +35,7 @@ export default function RegisterScreen() {
             return;
         }
 
-        setLoading(true);
-
-        try {
-            // 2. Connectivity Check
-            const networkState = await Network.getNetworkStateAsync();
-            const isOnline = networkState.isConnected && networkState.isInternetReachable;
-
-            if (!isOnline) {
-                Alert.alert('Offline', 'You must be connected to the internet to create an account.');
-                setLoading(false);
-                return;
-            }
-
-            // 3. API Call
-            console.log('Registering account for:', formData.phoneNumber);
-
-            const response = await AuthService.register({
-                phoneNumber: formData.phoneNumber,
-                name: formData.name,
-                email: formData.email,
-                password: formData.password
-            });
-
-            console.log('Register Response:', response);
-
-            if (!response.success) {
-                throw new Error(response.message || 'Registration failed');
-            }
-
-            const { user, token } = response.data;
-
-            console.log('Register User Data:', user);
-
-            // Normalize userType
-            const normalizedUserType = (user.userType || '').toLowerCase();
-            const validUserType = (normalizedUserType === 'farmer' || normalizedUserType === 'guest')
-                ? normalizedUserType
-                : 'guest';
-
-            // 4. Update Store & Local DB
-            await setUser({
-                userId: user.id, // Mapping id -> userId
-                phoneNumber: user.phoneNumber,
-                token: token,
-                userType: validUserType as 'guest' | 'farmer',
-                name: user.name,
-                email: user.email
-            });
-
-            Alert.alert('Success 🎉', 'Your account has been created!');
-            router.replace('/(tabs)');
-        } catch (error: any) {
-            console.error('Registration Error:', error);
-
-            const errorMessage = getErrorMessage(error);
-            Alert.alert('Registration Failed', errorMessage);
-        } finally {
-            setLoading(false);
-        }
+        register(formData);
     };
     const { isConnected } = useNetwork();
 
@@ -173,10 +114,12 @@ export default function RegisterScreen() {
                             title="Register"
                             onPress={handleRegister}
                             loading={loading}
+                            disabled={loading}
                         />
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
+            <FullScreenLoader visible={loading} message="Creating account..." />
         </SafeAreaView>
     );
 }

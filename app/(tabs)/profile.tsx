@@ -6,6 +6,7 @@ import Button from '../../components/Button';
 import { LogOut, User, Settings, Shield, HelpCircle, Phone, UserPen, ChevronRight, RefreshCcw, Lock } from 'lucide-react-native';
 import { useNetwork } from '../../context/NetworkContext';
 import IsOffline from '../../components/IsOffline';
+import { MenuItemProps } from '../../types';
 
 export default function ProfileScreen() {
     const { phoneNumber, userType, logout, name, email, resetApp } = useUserStore();
@@ -15,7 +16,7 @@ export default function ProfileScreen() {
     if (!isConnected) {
         return <IsOffline message="Please connect to the internet to view your profile." />;
     }
-    
+
     const handleReset = () => {
         Alert.alert(
             'Reset Application',
@@ -64,7 +65,7 @@ export default function ProfileScreen() {
                 >
                     <Text className="text-red-500 text-center font-bold">Log Out</Text>
                 </TouchableOpacity>
-                  <TouchableOpacity
+                <TouchableOpacity
                     onPress={async () => {
                         handleReset();
                     }}
@@ -90,7 +91,7 @@ export default function ProfileScreen() {
         ]);
     };
 
-    const MenuItem = ({ icon: Icon, label, onPress, color = "#4B5563" }: any) => (
+    const MenuItem = ({ icon: Icon, label, onPress, color = "#4B5563" }: MenuItemProps) => (
         <TouchableOpacity onPress={onPress} className="flex-row items-center gap-4 p-4 bg-white mb-2 rounded-2xl border border-gray-100">
             <View className="w-10 h-10 items-center justify-center rounded-xl bg-gray-50">
                 <Icon color={color} size={24} />
