@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChevronLeft, Share2, Save } from 'lucide-react-native';
+import { ChevronLeft, Share2, Save, MessageCircleWarningIcon } from 'lucide-react-native';
 import Markdown from 'react-native-markdown-display';
 import Button from '../../components/Button';
 import { markdownStyles } from '@/utils/markdownstyle';
@@ -14,6 +14,7 @@ export default function ResultScreen() {
     if (!result) return <View className="flex-1 items-center justify-center"><Text>No result found.</Text></View>;
 
     const data = JSON.parse(typeof result === 'string' ? result : result[0]);
+    const confPercent = Math.round(data.confidence * 100);
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
@@ -37,8 +38,8 @@ export default function ResultScreen() {
                 <View className="p-6 -mt-6 bg-white rounded-t-3xl min-h-screen">
                     <View className="flex-row items-center justify-between mb-2">
                         <Text className="text-green-600 font-bold tracking-widest capitalize text-xs">{data.crop}</Text>
-                        <View className="bg-green-100 px-3 py-1 rounded-full">
-                            <Text className="text-green-700 text-xs font-bold">{Math.round(data.confidence * 100)}% Confidence</Text>
+                        <View className={`${confPercent < 50 ? 'bg-red-100' : confPercent < 80 ? 'bg-yellow-100' : 'bg-green-100'} px-3 py-1 rounded-full`}>
+                            <Text className={`${confPercent < 50 ? 'text-red-700' : confPercent < 80 ? 'text-yellow-700' : 'text-green-700'} text-xs font-bold`}>{confPercent}% Confidence</Text>
                         </View>
                     </View>
 
@@ -61,6 +62,10 @@ export default function ResultScreen() {
                         <Markdown style={markdownStyles}>
                             {data.advice}
                         </Markdown>
+                        <View className={`flex-row items-center p-3 pr-5 rounded-lg border ${confPercent < 80 ? 'bg-red-50 border-red-400' : 'bg-yellow-50 border-yellow-400'}`}>
+                            <MessageCircleWarningIcon size={18} color={confPercent < 80 ? "#ef4444" : "#dc952aff"} />
+                            <Text className={`text-xs ml-2 font-medium ${confPercent < 80 ? 'text-red-600' : 'text-yellow-600'}`}>Make sure to consult an expert for proper treatment as this is an AI suggestion. AgriAI is not responsible for any damages caused by the use of this information.</Text>
+                        </View>
                     </View>
 
                     <View className='flex-row justify-between gap-2'>

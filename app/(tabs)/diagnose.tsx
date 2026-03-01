@@ -131,7 +131,7 @@ export default function DiagnoseScreen() {
                 disabled={diagnosisMutation.isPending}
             />
             <View className="h-20" />
-            <FullScreenLoader visible={diagnosisMutation.isPending} message="Analyzing image..." />
+            <FullScreenLoader visible={diagnosisMutation.isPending} message="Analyzing crop image..." />
         </ScrollView>
     );
 }

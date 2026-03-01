@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { View, Text, Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, BackHandler } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserStore } from '../../store/userStore';
 import { useRouter } from 'expo-router';
@@ -14,6 +14,21 @@ import FullScreenLoader from '@/components/FullScreenLoader';
 export default function RegisterScreen() {
     const router = useRouter();
     const { mutate: register, isPending: loading } = useRegister();
+
+    useEffect(() => {
+        const onBackPress = () => {
+            if (router.canGoBack()) {
+                router.back();
+            } else {
+                router.replace('/auth/welcome');
+            }
+            return true; // prevent default behavior (exit app)
+        };
+
+        const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+        return () => subscription.remove();
+    }, [router]);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -50,7 +65,16 @@ export default function RegisterScreen() {
             >
                 <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 24 }} showsVerticalScrollIndicator={false}>
                     <View className="mb-8">
-                        <TouchableOpacity onPress={() => router.back()} className="mb-6">
+                        <TouchableOpacity
+                            onPress={() => {
+                                if (router.canGoBack()) {
+                                    router.back();
+                                } else {
+                                    router.replace('/auth/welcome');
+                                }
+                            }}
+                            className="mb-6"
+                        >
                             <Text className="text-primary font-bold">← Back</Text>
                         </TouchableOpacity>
                         <View className="bg-primary/10 w-16 h-16 rounded-2xl items-center justify-center mb-4">

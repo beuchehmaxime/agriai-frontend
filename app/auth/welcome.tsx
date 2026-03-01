@@ -43,6 +43,15 @@ export default function Welcome() {
                 />
 
                 <Button
+                    title="Register"
+                    variant='outline'
+                    className='bg-white'
+                    onPress={async () => {
+                        router.replace('/auth/register');
+                    }}
+                />
+
+                {/* <Button
                     title="Continue as Guest"
                     variant='outline'
                     className='bg-white'
@@ -58,7 +67,7 @@ export default function Welcome() {
                         });
                         router.replace('/(tabs)');
                     }}
-                />
+                /> */}
             </View>
         </View>
     );
