@@ -1,8 +1,9 @@
+import React, { useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserStore } from '../../store/userStore';
 import { useCartStore } from '../../store/useCartStore';
-import { Bell, CloudSun, BookOpen, Users, ChevronRight, Sprout, User2, MapPin, UserRoundPen, ShoppingBag, PackageOpen } from 'lucide-react-native';
+import { Bell, CloudSun, BookOpen, Users, ChevronRight, Sprout, User2, MapPin, UserRoundPen, ShoppingBag, PackageOpen, MessageSquare } from 'lucide-react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { DiagnosisLocal, QuickAccessItemProps } from '../../types';
 import { useDiagnosisHistory } from '../../hooks/useDiagnosis';
@@ -10,7 +11,14 @@ import { useDiagnosisHistory } from '../../hooks/useDiagnosis';
 export default function HomeScreen() {
     const { phoneNumber, userType, name } = useUserStore();
     const router = useRouter();
-    const { data: diagnoses } = useDiagnosisHistory();
+    const { data: diagnoses, refetch } = useDiagnosisHistory();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            refetch();
+        }, [refetch])
+    );
+
     const recentDiagnoses = diagnoses ? diagnoses.slice(0, 3) : [];
     const cartItemsCount = useCartStore((state) => state.getTotalItems());
 
@@ -64,10 +72,10 @@ export default function HomeScreen() {
                             </View>
                             <View>
                                 <Text className="text-white text-lg font-bold">
-                                    {userType === 'guest' ? 'Guest Farmer' : name}
+                                    {name}
                                 </Text>
-                                <Text className="text-white/80 text-sm">
-                                    {phoneNumber || 'No phone number'}
+                                <Text className="text-white/80 text-sm font-medium">
+                                    {userType === 'Agronomist' ? 'Expert Agronomist' : 'Verified Farmer'}
                                 </Text>
                             </View>
                         </View>
@@ -85,7 +93,13 @@ export default function HomeScreen() {
                 {/* Quick Access Grid */}
                 <View className="mb-6">
                     <Text className="text-lg font-bold text-gray-800 mb-4">Quick Access</Text>
-                    <View className="flex-row flex-wrap justify-between">
+                    <View className="flex-row flex-wrap justify-evenly gap-2 items-center">
+                        <QuickAccessItem
+                            icon={MessageSquare}
+                            label="Consult"
+                            color="bg-teal-500"
+                            onPress={() => router.push('/consult')}
+                        />
                         <QuickAccessItem
                             icon={CloudSun}
                             label="Weather"
@@ -105,6 +119,12 @@ export default function HomeScreen() {
                             onPress={() => router.push('/community')}
                         />
                         <QuickAccessItem
+                            icon={ShoppingBag}
+                            label="Shop"
+                            color="bg-pink-500"
+                            onPress={() => router.push('/shop')}
+                        />
+                        <QuickAccessItem
                             icon={PackageOpen}
                             label="Orders"
                             color="bg-orange-500"
@@ -117,7 +137,7 @@ export default function HomeScreen() {
                 <View className="mb-8">
                     <View className="flex-row justify-between items-center mb-4">
                         <Text className="text-lg font-bold text-gray-800">Recent Activity</Text>
-                        <TouchableOpacity onPress={() => router.push('/(tabs)/history')}>
+                        <TouchableOpacity onPress={() => router.push('/diagnosis/history')}>
                             <Text className="text-primary font-semibold">See All</Text>
                         </TouchableOpacity>
                     </View>

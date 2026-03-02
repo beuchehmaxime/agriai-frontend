@@ -77,9 +77,9 @@ export default function ResultScreen() {
                         />
                         <Button
                             title="Consult Expert"
-                            onPress={() => router.navigate('/(tabs)/shop')}
-                            className="mt-2 mb-2 bg-white w-1/2"
-                            variant='outline'
+                            onPress={() => router.navigate('/(tabs)/consult')}
+                            className="mt-2 mb-2 w-1/2"
+                            variant='primary'
                         />
                     </View>
                 </View>

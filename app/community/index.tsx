@@ -78,25 +78,7 @@ export default function CommunityScreen() {
         return <IsOffline message="Please connect to the internet to access communities." />;
     }
 
-    if (userType === 'guest') {
-        return (
-            <SafeAreaView className="flex-1 bg-white p-6 justify-center items-center">
-                <View className="bg-primary/10 p-8 rounded-full mb-8">
-                    <Lock color="#4ADE80" size={64} />
-                </View>
-                <Text className="text-3xl font-black text-gray-900 text-center mb-4">Sign Up Required</Text>
-                <Text className="text-gray-500 text-center text-lg mb-10 leading-6">
-                    Join thousands of farmers! Create a full account to join communities, ask questions, and share your knowledge.
-                </Text>
-                <TouchableOpacity
-                    onPress={() => router.push('/auth/register')}
-                    className="bg-primary w-full py-4 rounded-2xl shadow-lg shadow-green-200"
-                >
-                    <Text className="text-white text-center font-bold text-lg">Create Account</Text>
-                </TouchableOpacity>
-            </SafeAreaView>
-        );
-    }
+
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50">

@@ -31,15 +31,14 @@ export const useLogin = () => {
             const { user, token } = data;
 
             const normalizedUserType = (user.userType || '').toLowerCase();
-            const validUserType = (normalizedUserType === 'farmer' || normalizedUserType === 'guest')
-                ? normalizedUserType
-                : 'guest';
+            let validUserType: 'Farmer' | 'Agronomist' = 'Farmer'; // Default to Farmer
+            if (normalizedUserType === 'agronomist') validUserType = 'Agronomist';
 
             await setUser({
                 userId: user.id,
                 phoneNumber: user.phoneNumber,
                 token: token,
-                userType: validUserType as 'guest' | 'farmer',
+                userType: validUserType,
                 name: user.name,
                 email: user.email
             });
@@ -83,15 +82,14 @@ export const useRegister = () => {
             const { user, token } = data;
 
             const normalizedUserType = (user.userType || '').toLowerCase();
-            const validUserType = (normalizedUserType === 'farmer' || normalizedUserType === 'guest')
-                ? normalizedUserType
-                : 'guest';
+            let validUserType: 'Farmer' | 'Agronomist' = 'Farmer'; // Default to Farmer
+            if (normalizedUserType === 'agronomist') validUserType = 'Agronomist';
 
             await setUser({
                 userId: user.id,
                 phoneNumber: user.phoneNumber,
                 token: token,
-                userType: validUserType as 'guest' | 'farmer',
+                userType: validUserType,
                 name: user.name,
                 email: user.email
             });

@@ -35,7 +35,7 @@ export const useUpdateProfile = () => {
                 userId: store.userId || updatedUser.id,
                 phoneNumber: store.phoneNumber || updatedUser.phoneNumber,
                 token: store.token || '', // Token doesn't change on profile update
-                userType: store.userType || updatedUser.userType || 'guest',
+                userType: store.userType || updatedUser.userType || 'Farmer',
                 name: updatedUser.name || store.name,
                 email: updatedUser.email || store.email
             });

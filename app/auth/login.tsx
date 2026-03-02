@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { View, Text, Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity } from 'react-native';
+import { useState, useEffect } from 'react';
+import { View, Text, Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, BackHandler } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserStore } from '../../store/userStore';
 import { useRouter } from 'expo-router';
@@ -14,6 +14,21 @@ import FullScreenLoader from '@/components/FullScreenLoader';
 export default function LoginScreen() {
     const router = useRouter();
     const { mutate: login, isPending: loading } = useLogin();
+
+    useEffect(() => {
+        const onBackPress = () => {
+            if (router.canGoBack()) {
+                router.back();
+            } else {
+                router.replace('/auth/welcome');
+            }
+            return true; // prevent default behavior
+        };
+
+        const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+        return () => subscription.remove();
+    }, [router]);
 
     const [formData, setFormData] = useState({
         phoneNumber: '',
@@ -46,13 +61,13 @@ export default function LoginScreen() {
                         <Text className="text-primary font-bold">← Back</Text>
                     </TouchableOpacity>
 
-                    <View className="items-center mb-8">
+                    <View className="items-center mb-8 w-full">
                         <View className="w-20 h-20 bg-primary/20 rounded-full items-center justify-center mb-4">
                             <Sprout color="#4ADE80" size={40} />
                         </View>
-                        <Text className="text-3xl font-bold text-gray-900">Welcome Back</Text>
-                        <Text className="text-gray-500 mt-2 text-center text-lg">
-                            Login to access your farm dashboard.
+                        <Text className="text-3xl font-bold text-gray-900 text-center w-full">Welcome Back</Text>
+                        <Text className="text-gray-500 mt-2 text-center text-lg w-full px-4">
+                            Login to access your intelligent crop disease assistant.
                         </Text>
                     </View>
 

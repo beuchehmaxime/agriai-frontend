@@ -4,7 +4,7 @@ import { useUserStore } from '../../store/userStore';
 import { useRouter } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import Button from '../../components/Button';
-import { LogOut, User, Settings, Shield, HelpCircle, Phone, UserPen, ChevronRight, RefreshCcw, Lock } from 'lucide-react-native';
+import { LogOut, User, Settings, Shield, HelpCircle, Phone, UserPen, ChevronRight, RefreshCcw, Lock, Award } from 'lucide-react-native';
 import { useNetwork } from '../../context/NetworkContext';
 import IsOffline from '../../components/IsOffline';
 import { MenuItemProps } from '../../types';
@@ -42,43 +42,7 @@ export default function ProfileScreen() {
     };
 
 
-    if (userType === 'guest') {
-        return (
-            <SafeAreaView className="flex-1 bg-white p-6 justify-center items-center">
-                <View className="bg-primary/10 p-8 rounded-full mb-8">
-                    <Lock color="#4ADE80" size={64} />
-                </View>
-                <Text className="text-3xl font-black text-gray-900 text-center mb-4">Sign Up Required</Text>
-                <Text className="text-gray-500 text-center text-lg mb-10 leading-6">
-                    Please create an account to view and manage your profile settings.
-                </Text>
-                <TouchableOpacity
-                    onPress={() => router.push('/auth/register')}
-                    className="bg-primary w-full py-4 rounded-2xl shadow-lg shadow-green-200"
-                >
-                    <Text className="text-white text-center font-bold text-lg">Create Account</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={async () => {
-                        await logout();
-                        queryClient.clear();
-                        router.replace('/auth/welcome');
-                    }}
-                    className="mt-4 p-4"
-                >
-                    <Text className="text-red-500 text-center font-bold">Log Out</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={async () => {
-                        handleReset();
-                    }}
-                    className="mt-4 p-4"
-                >
-                    <Text className="text-red-500 text-center font-bold">Reset Application</Text>
-                </TouchableOpacity>
-            </SafeAreaView>
-        );
-    }
+
 
     const handleLogout = () => {
         Alert.alert('Logout', 'Are you sure you want to logout?', [
@@ -110,7 +74,7 @@ export default function ProfileScreen() {
             <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
                 <View className='flex-row justify-between items-center mb-6'>
                     <Text className="text-3xl font-bold text-gray-900">Profile</Text>
-                    {userType === 'farmer' && (
+                    {(userType === 'Farmer' || userType === 'Agronomist') && (
                         <TouchableOpacity
                             onPress={() => router.push('/profile/edit')}
                             className="bg-primary/10 p-2 rounded-full"
@@ -125,18 +89,23 @@ export default function ProfileScreen() {
                         <User color="#4ADE80" size={48} />
                     </View>
                     <Text className="text-2xl font-bold text-gray-900">
-                        {userType === 'farmer' ? (name || 'Farmer Profile') : 'Guest Account'}
+                        {name || 'Profile'}
                     </Text>
                     <Text className="text-gray-500 text-lg mb-1">{phoneNumber}</Text>
                     {email && <Text className="text-gray-400 text-sm mb-4">{email}</Text>}
 
                     <View className="mt-2 bg-green-100 px-4 py-1 rounded-full">
-                        <Text className="text-primary font-bold text-xs uppercase tracking-wider">Verified Farmer</Text>
+                        <Text className="text-primary font-bold text-xs uppercase tracking-wider">
+                            {userType === 'Agronomist' ? 'Expert Agronomist' : 'Verified Farmer'}
+                        </Text>
                     </View>
                 </View>
 
                 <View className="pt-2">
                     <Text className="text-sm font-bold text-gray-400 mb-4 ml-2 uppercase tracking-widest">Account Details</Text>
+                    {userType === 'Farmer' && (
+                        <MenuItem icon={Award} label="Apply to be an Expert" onPress={() => router.push('/profile/apply-expert' as any)} color="#4ADE80" />
+                    )}
                     <MenuItem icon={Settings} label="Settings" onPress={() => { }} />
                     <MenuItem icon={Shield} label="Privacy Policy" onPress={() => { }} />
                     <MenuItem icon={HelpCircle} label="Help & Support" onPress={() => { }} />

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, Image, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Search, ShoppingCart, Plus, Minus, Inbox, ShoppingBag } from 'lucide-react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useCategories, useProducts } from '../../hooks/useShop';
 import { useCartStore } from '../../store/useCartStore';
 import { formatCurrency } from '../../utils/currency';
@@ -12,11 +12,18 @@ export default function ShopScreen() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
 
-    const { data: categories, isLoading: isCategoriesLoading } = useCategories();
-    const { data: products, isLoading: isProductsLoading } = useProducts({
+    const { data: categories, isLoading: isCategoriesLoading, refetch: refetchCategories } = useCategories();
+    const { data: products, isLoading: isProductsLoading, refetch: refetchProducts } = useProducts({
         search: searchQuery.length > 2 ? searchQuery : undefined,
         categoryId: selectedCategory || undefined
     });
+
+    useFocusEffect(
+        React.useCallback(() => {
+            refetchCategories();
+            refetchProducts();
+        }, [refetchCategories, refetchProducts, searchQuery, selectedCategory])
+    );
 
     const cartItemsCount = useCartStore((state) => state.getTotalItems());
     const addItem = useCartStore((state) => state.addItem);

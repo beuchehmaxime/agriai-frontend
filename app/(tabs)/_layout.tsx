@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Home, History, User, Camera, ShoppingBag } from 'lucide-react-native';
+import { Home, MessageSquare, User, Camera, ShoppingBag } from 'lucide-react-native';
 import { View, Text } from 'react-native';
 
 export default function TabLayout() {
@@ -31,10 +31,10 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="history"
+                name="consult"
                 options={{
-                    title: 'History',
-                    tabBarIcon: ({ color, size }) => <History color={color} size={size} />,
+                    title: 'Consult',
+                    tabBarIcon: ({ color, size }) => <MessageSquare color={color} size={size} />,
                 }}
             />
             <Tabs.Screen

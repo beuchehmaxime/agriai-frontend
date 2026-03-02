@@ -5,12 +5,12 @@ interface UserState {
     userId: string | null;
     phoneNumber: string | null;
     token: string | null;
-    userType: 'guest' | 'farmer' | null;
+    userType: 'Farmer' | 'Agronomist' | null;
     isLoading: boolean;
     name: string | null;
     email: string | null;
     savedPhoneNumber: string | null;
-    setUser: (user: { userId: string; phoneNumber: string; token?: string; userType: 'guest' | 'farmer'; name?: string | null; email?: string | null }) => void;
+    setUser: (user: { userId: string; phoneNumber: string; token?: string; userType: 'Farmer' | 'Agronomist'; name?: string | null; email?: string | null }) => void;
     loadUser: () => Promise<void>;
     logout: () => void;
     resetApp: () => Promise<void>;
@@ -31,6 +31,11 @@ export const useUserStore = create<UserState>((set) => ({
         await saveUserSection(user.userId, user.phoneNumber, user.token || '', user.userType, user.name, user.email);
         await saveSavedPhone(user.phoneNumber);
         await saveProfile(user.phoneNumber, user.userId, user.token || '', user.userType, user.name, user.email);
+
+        if (user.token) {
+            const { socketService } = require('../services/socket');
+            socketService.connect(user.token);
+        }
     },
 
     loadUser: async () => {
@@ -42,7 +47,7 @@ export const useUserStore = create<UserState>((set) => ({
                     userId: user.userId,
                     phoneNumber: user.phoneNumber,
                     token: user.token,
-                    userType: user.userType as 'guest' | 'farmer',
+                    userType: user.userType as 'Farmer' | 'Agronomist',
                     name: user.name,
                     email: user.email,
                     isLoading: false
@@ -51,6 +56,13 @@ export const useUserStore = create<UserState>((set) => ({
 
             const savedPhone = await getSavedPhone();
             set({ savedPhoneNumber: savedPhone, isLoading: false });
+
+            // Connect to socket if token exists
+            if (user?.token) {
+                const { socketService } = require('../services/socket');
+                socketService.connect(user.token);
+            }
+
         } catch (e) {
             console.error("Failed to load user", e);
             set({ isLoading: false });
@@ -60,6 +72,9 @@ export const useUserStore = create<UserState>((set) => ({
     logout: async () => {
         set({ userId: null, phoneNumber: null, token: null, userType: null, name: null, email: null });
         await clearUserSession();
+
+        const { socketService } = require('../services/socket');
+        socketService.disconnect();
     },
 
     resetApp: async () => {

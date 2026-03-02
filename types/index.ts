@@ -3,7 +3,7 @@ export interface User {
     phoneNumber: string;
     email?: string | null;
     name?: string | null;
-    userType: 'FARMER' | 'ADMIN' | 'AGRONOMIST' | 'guest';
+    userType: 'FARMER' | 'ADMIN' | 'AGRONOMIST';
     createdAt?: string;
     updatedAt?: string;
 }

@@ -1,4 +1,5 @@
-import { View, Text, Image } from 'react-native';
+import { useEffect } from 'react';
+import { View, Text, Image, BackHandler } from 'react-native';
 import { useRouter } from 'expo-router';
 import Button from '../../components/Button';
 import { Sprout, WifiOff } from 'lucide-react-native';
@@ -9,6 +10,17 @@ export default function Welcome() {
     const router = useRouter();
     const { isConnected, isInternetReachable } = useNetwork();
     const { setUser } = useUserStore();
+
+    useEffect(() => {
+        const onBackPress = () => {
+            BackHandler.exitApp();
+            return true;
+        };
+
+        const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+        return () => subscription.remove();
+    }, []);
 
     // Consider offline if not connected or not reachable (though reachable can be flaky, isConnected is safer for basic check)
     const isOffline = !isConnected;
@@ -51,23 +63,7 @@ export default function Welcome() {
                     }}
                 />
 
-                {/* <Button
-                    title="Continue as Guest"
-                    variant='outline'
-                    className='bg-white'
-                    onPress={async () => {
-                        const guestId = `guest_${Date.now()}`;
-                        await setUser({
-                            userId: guestId,
-                            phoneNumber: '',
-                            token: '',
-                            userType: 'guest',
-                            name: 'Guest',
-                            email: ''
-                        });
-                        router.replace('/(tabs)');
-                    }}
-                /> */}
+
             </View>
         </View>
     );

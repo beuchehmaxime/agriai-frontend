@@ -22,10 +22,10 @@ export default function CustomDrawerContent(props: DrawerContentComponentProps) 
                         <UserIcon size={32} color="#4ADE80" />
                     </View>
                     <Text className="text-white text-lg font-bold">
-                        {phoneNumber || 'Guest User'}
+                        {phoneNumber || 'Registered User'}
                     </Text>
                     <Text className="text-white/80 text-sm">
-                        {userType === 'guest' ? 'Guest Access' : 'Registered User'}
+                        {userType === 'Agronomist' ? 'Expert Agronomist' : 'Verified Farmer'}
                     </Text>
                 </View>
 

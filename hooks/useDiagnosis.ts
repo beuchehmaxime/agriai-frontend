@@ -42,7 +42,7 @@ export const usePredictDiagnosis = () => {
                     }
                 };
             } else {
-                console.log('Offline/Guest Mode: Using local model logic');
+                console.log('Offline Mode: Using local model logic');
                 await new Promise(resolve => setTimeout(resolve, 2000));
                 return {
                     diagnosis: {

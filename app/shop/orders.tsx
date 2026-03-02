@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, BackHandler } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeft, Package, Clock, CheckCircle } from 'lucide-react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { useOrders } from '../../hooks/useShop';
 import { formatCurrency } from '../../utils/currency';
 import { DELIVERY_FEE } from '../../utils/constants';
@@ -10,7 +10,13 @@ import { DELIVERY_FEE } from '../../utils/constants';
 export default function OrdersScreen() {
     const router = useRouter();
     const { fromSuccess } = useLocalSearchParams();
-    const { data: orders, isLoading } = useOrders();
+    const { data: orders, isLoading, refetch } = useOrders();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            refetch();
+        }, [refetch])
+    );
 
     const handleBack = () => {
         if (fromSuccess === 'true') {
