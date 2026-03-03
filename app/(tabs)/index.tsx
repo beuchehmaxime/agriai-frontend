@@ -1,17 +1,19 @@
 import React, { useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserStore } from '../../store/userStore';
 import { useCartStore } from '../../store/useCartStore';
-import { Bell, CloudSun, BookOpen, Users, ChevronRight, Sprout, User2, MapPin, UserRoundPen, ShoppingBag, PackageOpen, MessageSquare } from 'lucide-react-native';
+import { Bell, CloudSun, BookOpen, ChevronRight, Sprout, User2, MapPin, UserRoundPen, ShoppingBag, PackageOpen, MessageSquare, Calculator, Stethoscope, TrendingUp, Droplets, Bug, AlertTriangle, CloudRain, Sun, Leaf, ArrowRight } from 'lucide-react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { DiagnosisLocal, QuickAccessItemProps } from '../../types';
 import { useDiagnosisHistory } from '../../hooks/useDiagnosis';
+import { useWeather } from '../../hooks/useWeather';
 
 export default function HomeScreen() {
     const { phoneNumber, userType, name } = useUserStore();
     const router = useRouter();
     const { data: diagnoses, refetch } = useDiagnosisHistory();
+    const { data: weatherData, isLoading: isLoadingWeather } = useWeather(); // Added from new code
 
     useFocusEffect(
         React.useCallback(() => {
@@ -83,11 +85,41 @@ export default function HomeScreen() {
                             <UserRoundPen color="white" size={24} />
                         </TouchableOpacity>
                     </View>
-                    <View className="flex-row items-center gap-2 bg-white/20 p-3 rounded-xl">
-                        <MapPin color="white" size={24} />
-                        <Text className="text-white font-medium">Cameroon</Text>
-                        {/* Location fetching would go here */}
-                    </View>
+                    {/* mini Weather widget on Home Page linked to actual weather module */}
+                    <TouchableOpacity
+                        onPress={() => router.push('/weather')}
+                        className="bg-white/10 p-4 rounded-2xl flex-row items-center justify-between border border-white/20"
+                    >
+                        <View className="flex-row items-center">
+                            {isLoadingWeather ? (
+                                <ActivityIndicator color="white" size="small" />
+                            ) : weatherData ? (
+                                weatherData.current.condition.toLowerCase().includes('rain') ? (
+                                    <CloudRain color="white" size={32} />
+                                ) : weatherData.current.condition.toLowerCase().includes('sunny') || weatherData.current.condition.toLowerCase().includes('clear') ? (
+                                    <Sun color="white" size={32} />
+                                ) : (
+                                    <CloudSun color="white" size={32} />
+                                )
+                            ) : (
+                                <CloudSun color="white" size={32} />
+                            )}
+                            <View className="ml-3">
+                                <Text className="text-white font-medium text-sm">
+                                    {isLoadingWeather ? 'Loading location...' : weatherData ? weatherData.location : 'Tap to set location'}
+                                </Text>
+                                <Text className="text-white/80 text-xs mt-0.5">
+                                    {isLoadingWeather ? 'Fetching forecast...' : weatherData ? `${weatherData.current.temp}°C, ${weatherData.current.condition}` : 'Location required'}
+                                </Text>
+                            </View>
+                        </View>
+                        {!isLoadingWeather && weatherData && (
+                            <View className="items-end">
+                                <Text className="text-white font-bold text-xl">{weatherData.current.temp}°C</Text>
+                                <Text className="text-white/80 text-[10px]">Tap for 5-day</Text>
+                            </View>
+                        )}
+                    </TouchableOpacity>
                 </View>
 
                 {/* Quick Access Grid */}
@@ -112,12 +144,7 @@ export default function HomeScreen() {
                             color="bg-green-500"
                             onPress={() => router.push('/tips')}
                         />
-                        <QuickAccessItem
-                            icon={Users}
-                            label="Community"
-                            color="bg-purple-500"
-                            onPress={() => router.push('/community')}
-                        />
+
                         <QuickAccessItem
                             icon={ShoppingBag}
                             label="Shop"
@@ -172,4 +199,4 @@ export default function HomeScreen() {
             </ScrollView>
         </SafeAreaView>
     );
-}       
+}

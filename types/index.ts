@@ -121,3 +121,29 @@ export interface Order {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface Tip {
+    id: string;
+    title: string;
+    content: string;
+    imageUrl?: string | null;
+    status: 'PENDING' | 'APPROVED' | 'REJECTED';
+    authorId: string;
+    author: {
+        id: string;
+        name: string;
+        userType: string;
+    };
+    upvotes: number;
+    downvotes: number;
+    createdAt: string;
+    updatedAt: string;
+    hasVoted?: boolean | null;
+    userVote?: boolean | null;
+}
+
+export interface TipResponse {
+    success: boolean;
+    message: string;
+    data: Tip | Tip[];
+}

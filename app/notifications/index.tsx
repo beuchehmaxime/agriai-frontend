@@ -30,14 +30,6 @@ export const MOCK_NOTIFICATIONS = [
         type: 'diagnosis',
         date: 'Yesterday',
         read: true,
-    },
-    {
-        id: '4',
-        title: 'Community Update',
-        message: 'New farmers have joined the AgriAI community in your region.',
-        type: 'community',
-        date: '2 days ago',
-        read: true,
     }
 ];
 
