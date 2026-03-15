@@ -24,6 +24,7 @@ const getBaseUrl = () => {
     return `http://${FALLBACK_IP}:3000/api`;
 };
 
+// const BASE_URL = "https://agriai-backend-0nxs.onrender.com/api";
 const BASE_URL = getBaseUrl();
 console.log('[API] >>> ACTIVE BASE_URL:', BASE_URL);
 

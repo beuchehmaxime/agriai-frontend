@@ -20,7 +20,6 @@ export default function SummaryScreen() {
 
     const [paymentMethod, setPaymentMethod] = useState<'cash' | 'mtn' | 'orange'>('cash');
     const [momoNumber, setMomoNumber] = useState('');
-    const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
     const handleConfirmOrder = () => {
         const cleanedNumber = momoNumber.replace(/\s/g, '');
@@ -34,10 +33,9 @@ export default function SummaryScreen() {
                 items: items.map(i => ({
                     productId: i.product.id,
                     quantity: i.quantity
-                }))
-                // backend requires proper shipping info usually, demo:
-                // paymentMethod,
-                // momoNumber: paymentMethod !== 'cash' ? momoNumber : undefined
+                })),
+                paymentMethod: paymentMethod === 'mtn' ? 'MTN_MOMO' : paymentMethod === 'orange' ? 'ORANGE_MOMO' : 'CASH_ON_DELIVERY',
+                phoneNumber: paymentMethod !== 'cash' ? momoNumber : undefined
             };
 
             createOrderMutation.mutate(orderPayload, {
@@ -55,24 +53,7 @@ export default function SummaryScreen() {
             });
         };
 
-        if (paymentMethod !== 'cash') {
-            setIsProcessingPayment(true);
-            setTimeout(() => {
-                setIsProcessingPayment(false);
-                // 80% success rate for demo purposes
-                const isSuccess = Math.random() > 0.2;
-                if (isSuccess) {
-                    processOrder();
-                } else {
-                    Alert.alert(
-                        "Transaction Failed",
-                        "The mobile money transaction was declined or timed out. Please check your balance and try again."
-                    );
-                }
-            }, 3000); // Simulated 3 second API wait
-        } else {
-            processOrder();
-        }
+        processOrder();
     };
 
     const subtotal = getTotalPrice();
@@ -81,7 +62,7 @@ export default function SummaryScreen() {
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
-            <FullScreenLoader visible={createOrderMutation.isPending || isProcessingPayment} message={isProcessingPayment ? "Awaiting Mobile Money confirmation..." : "Processing your order..."} />
+            <FullScreenLoader visible={createOrderMutation.isPending} message="Processing your order..." />
 
             {/* Header */}
             <View className="flex-row items-center justify-between p-4 bg-white shadow-sm z-10">

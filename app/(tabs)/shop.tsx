@@ -75,7 +75,7 @@ export default function ShopScreen() {
                             onPress={() => setSelectedCategory('')}
                             className={`px-6 py-2 rounded-full mr-3 border ${selectedCategory === '' ? 'bg-primary border-primary' : 'bg-white border-gray-200'}`}
                         >
-                            <Text className={`font-bold ${selectedCategory === '' ? 'text-white' : 'text-gray-600'}`}>All</Text>
+                            <Text className={`font-bold text-xs ${selectedCategory === '' ? 'text-white' : 'text-gray-600'}`}>All</Text>
                         </TouchableOpacity>
 
                         {isCategoriesLoading ? (

@@ -54,6 +54,15 @@ export default function OrderDetailScreen() {
         }
     };
 
+    const getPaymentStatusColor = (status: string) => {
+        switch (status) {
+            case 'SUCCESS': return 'bg-green-100 text-green-700 border-green-200';
+            case 'PENDING': return 'bg-orange-100 text-orange-700 border-orange-200';
+            case 'FAILED': return 'bg-red-100 text-red-700 border-red-200';
+            default: return 'bg-gray-100 text-gray-700 border-gray-200';
+        }
+    };
+
     const getStatusIcon = (status: string) => {
         switch (status) {
             case 'PENDING': return <Clock size={20} color="#C2410C" />;
@@ -85,7 +94,12 @@ export default function OrderDetailScreen() {
                         {getStatusIcon(order.status)}
                     </View>
                     <Text className="text-xl font-bold text-gray-900 mb-1">{order.status}</Text>
-                    <Text className="text-gray-500 text-sm mb-4">
+                    <View className="flex-row items-center mb-4">
+                        <View className={`px-3 py-1 rounded-full border ${getPaymentStatusColor(order.paymentStatus)}`}>
+                            <Text className="text-[10px] font-bold uppercase tracking-wider">{order.paymentStatus} PAYMENT</Text>
+                        </View>
+                    </View>
+                    <Text className="text-gray-500 text-sm">
                         Placed on {new Date(order.createdAt).toLocaleDateString()} at {new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </Text>
                 </View>
@@ -127,8 +141,11 @@ export default function OrderDetailScreen() {
                     </View>
                     <View className="h-[1px] bg-gray-200 mb-4" />
                     <View className="flex-row justify-between items-center">
-                        <Text className="text-lg font-bold text-gray-900">Total Paid</Text>
-                        <Text className="text-3xl font-black text-gray-900">{formatCurrency(displayTotal)}</Text>
+                        <View>
+                            <Text className="text-lg font-bold text-gray-900">Total Paid</Text>
+                            <Text className="text-xs text-gray-500">via {order.paymentMethod?.replace('_', ' ')}</Text>
+                        </View>
+                        <Text className="text-3xl font-black text-gray-900">{formatCurrency((order.totalAmount || subtotal) + deliveryFee)}</Text>
                     </View>
                 </View>
 

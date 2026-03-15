@@ -181,8 +181,8 @@ export default function ChatScreen() {
                             inverted
                             showsVerticalScrollIndicator={false}
                             ListEmptyComponent={
-                                <View className="mt-10 items-center" style={{ transform: [{ scaleY: -1 }] }}>
-                                    <Text className="text-center text-gray-500">No messages yet. Say hi!</Text>
+                                <View className="mb-0 items-center">
+                                    <Text className="text-center text-lg text-gray-500">No messages yet. Say hi!</Text>
                                 </View>
                             }
                         />

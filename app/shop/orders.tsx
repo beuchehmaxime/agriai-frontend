@@ -43,6 +43,15 @@ export default function OrdersScreen() {
         }
     };
 
+    const getPaymentStatusColor = (status: string) => {
+        switch (status) {
+            case 'SUCCESS': return 'text-green-600';
+            case 'PENDING': return 'text-orange-500';
+            case 'FAILED': return 'text-red-600';
+            default: return 'text-gray-500';
+        }
+    };
+
     const getStatusIcon = (status: string) => {
         switch (status) {
             case 'PENDING': return <Clock size={16} color="#C2410C" />;
@@ -100,7 +109,13 @@ export default function OrdersScreen() {
                                 <View className="flex-row justify-between items-center mb-4">
                                     <View>
                                         <Text className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Order ID</Text>
-                                        <Text className="text-sm font-medium text-gray-900">{order.id.slice(-8).toUpperCase()}</Text>
+                                        <View className="flex-row items-center">
+                                            <Text className="text-sm font-medium text-gray-900">{order.id.slice(-8).toUpperCase()}</Text>
+                                            <View className="mx-2 w-1 h-1 rounded-full bg-gray-300" />
+                                            <Text className={`text-[10px] font-bold ${getPaymentStatusColor(order.paymentStatus)}`}>
+                                                {order.paymentMethod?.replace('_', ' ')} • {order.paymentStatus}
+                                            </Text>
+                                        </View>
                                     </View>
                                     <View className={`flex-row items-center px-3 py-1 rounded-full border ${getStatusColor(order.status)}`}>
                                         {getStatusIcon(order.status)}

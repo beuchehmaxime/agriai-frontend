@@ -23,7 +23,7 @@ export const ShopService = {
         return response.data;
     },
 
-    createOrder: async (data: { items: { productId: string, quantity: number }[] }): Promise<{ success: boolean; data: Order }> => {
+    createOrder: async (data: { items: { productId: string, quantity: number }[], paymentMethod: string, phoneNumber?: string }): Promise<{ success: boolean; data: Order }> => {
         const response = await apiClient.post('/orders', data);
         return response.data;
     },

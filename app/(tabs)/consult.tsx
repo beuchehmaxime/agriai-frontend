@@ -72,9 +72,16 @@ export default function ConsultScreen() {
         }
     };
 
+    const handleAgronomistPress = (item: any) => {
+        router.push({ 
+            pathname: '/consult/agronomist/[id]' as any, 
+            params: { id: item.id, name: item.name || 'Agronomist' } 
+        });
+    };
+
     const renderAgronomist = ({ item }: { item: any }) => (
         <TouchableOpacity
-            onPress={() => startConsultation(item.id)}
+            onPress={() => handleAgronomistPress(item)}
             className="bg-white p-4 rounded-2xl mb-4 shadow-sm border border-gray-100 flex-row items-center"
         >
             <View className="relative w-14 h-14 bg-gray-100 rounded-full items-center justify-center mr-4">
@@ -88,7 +95,7 @@ export default function ConsultScreen() {
                 </View>
             </View>
             <View className="bg-primary/10 px-4 py-2 rounded-full">
-                <Text className="text-primary font-bold">Connect</Text>
+                <Text className="text-primary font-bold">View Profile</Text>
             </View>
         </TouchableOpacity>
     );

@@ -117,6 +117,8 @@ export interface Order {
     userId: string;
     totalAmount: number;
     status: 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+    paymentMethod?: 'MTN_MOMO' | 'ORANGE_MOMO' | 'CASH_ON_DELIVERY';
+    paymentStatus: 'PENDING' | 'SUCCESS' | 'FAILED';
     items: OrderItem[];
     createdAt: string;
     updatedAt: string;

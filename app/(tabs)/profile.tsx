@@ -106,6 +106,13 @@ export default function ProfileScreen() {
                     {userType === 'Farmer' && (
                         <MenuItem icon={Award} label="Apply to be an Expert" onPress={() => router.push('/profile/apply-expert' as any)} color="#4ADE80" />
                     )}
+                    {userType === 'Agronomist' && (
+                        <>
+                            <MenuItem icon={Award} label="My Subscription Plans" onPress={() => router.push('/profile/agronomist/planner' as any)} color="#4ADE80" />
+                            <MenuItem icon={Award} label="My Wallet" onPress={() => router.push('/profile/agronomist/wallet' as any)} color="#F97316" />
+                            <MenuItem icon={User} label="My Subscribers" onPress={() => router.push('/profile/agronomist/subscribers' as any)} color="#3B82F6" />
+                        </>
+                    )}
                     <MenuItem icon={Settings} label="Settings" onPress={() => { }} />
                     <MenuItem icon={Shield} label="Privacy Policy" onPress={() => { }} />
                     <MenuItem icon={HelpCircle} label="Help & Support" onPress={() => { }} />

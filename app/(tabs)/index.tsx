@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } fr
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserStore } from '../../store/userStore';
 import { useCartStore } from '../../store/useCartStore';
-import { Bell, CloudSun, BookOpen, ChevronRight, Sprout, User2, MapPin, UserRoundPen, ShoppingBag, PackageOpen, MessageSquare, Calculator, Stethoscope, TrendingUp, Droplets, Bug, AlertTriangle, CloudRain, Sun, Leaf, ArrowRight } from 'lucide-react-native';
+import { Bell, CloudSun, BookOpen, ChevronRight, Sprout, User2, MapPin, UserRoundPen, ShoppingBag, PackageOpen, MessageSquare, Calculator, Stethoscope, TrendingUp, Droplets, Bug, AlertTriangle, CloudRain, Sun, Leaf, ArrowRight, Award, Wallet, Users } from 'lucide-react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { DiagnosisLocal, QuickAccessItemProps } from '../../types';
 import { useDiagnosisHistory } from '../../hooks/useDiagnosis';
@@ -126,44 +126,86 @@ export default function HomeScreen() {
                 <View className="mb-6">
                     <Text className="text-lg font-bold text-gray-800 mb-4">Quick Access</Text>
                     <View className="flex-row flex-wrap justify-evenly gap-2 items-center">
-                        <QuickAccessItem
-                            icon={MessageSquare}
-                            label="Consult"
-                            color="bg-teal-500"
-                            onPress={() => router.push('/consult')}
-                        />
-                        <QuickAccessItem
-                            icon={CloudSun}
-                            label="Weather"
-                            color="bg-blue-400"
-                            onPress={() => router.push('/weather')}
-                        />
-                        <QuickAccessItem
-                            icon={BookOpen}
-                            label="Tips"
-                            color="bg-green-500"
-                            onPress={() => router.push('/tips')}
-                        />
-
-                        <QuickAccessItem
-                            icon={ShoppingBag}
-                            label="Shop"
-                            color="bg-pink-500"
-                            onPress={() => router.push('/shop')}
-                        />
-                        <QuickAccessItem
-                            icon={PackageOpen}
-                            label="Orders"
-                            color="bg-orange-500"
-                            onPress={() => router.push('/shop/orders')}
-                        />
+                        {userType === 'Agronomist' ? (
+                            <>
+                                <QuickAccessItem
+                                    icon={MessageSquare}
+                                    label="Consultation"
+                                    color="bg-teal-500"
+                                    onPress={() => router.push('/consult')}
+                                />
+                                <QuickAccessItem
+                                    icon={Award}
+                                    label="Subscriptions"
+                                    color="bg-blue-500"
+                                    onPress={() => router.push('/profile/agronomist/planner' as any)}
+                                />
+                                <QuickAccessItem
+                                    icon={Users}
+                                    label="Subscribers"
+                                    color="bg-indigo-500"
+                                    onPress={() => router.push('/profile/agronomist/subscribers' as any)}
+                                />
+                                <QuickAccessItem
+                                    icon={Wallet}
+                                    label="Wallet"
+                                    color="bg-orange-600"
+                                    onPress={() => router.push('/profile/agronomist/wallet' as any)}
+                                />
+                                  <QuickAccessItem
+                                    icon={PackageOpen}
+                                    label="Orders"
+                                    color="bg-orange-300"
+                                    onPress={() => router.push('/shop/orders')}
+                                />
+                                <QuickAccessItem
+                                    icon={BookOpen}
+                                    label="Tips"
+                                    color="bg-green-500"
+                                    onPress={() => router.push('/tips')}
+                                />
+                            </>
+                        ) : (
+                            <>
+                                <QuickAccessItem
+                                    icon={MessageSquare}
+                                    label="Consult"
+                                    color="bg-teal-500"
+                                    onPress={() => router.push('/consult')}
+                                />
+                                <QuickAccessItem
+                                    icon={CloudSun}
+                                    label="Weather"
+                                    color="bg-blue-400"
+                                    onPress={() => router.push('/weather')}
+                                />
+                                <QuickAccessItem
+                                    icon={BookOpen}
+                                    label="Tips"
+                                    color="bg-green-500"
+                                    onPress={() => router.push('/tips')}
+                                />
+                                <QuickAccessItem
+                                    icon={ShoppingBag}
+                                    label="Shop"
+                                    color="bg-pink-500"
+                                    onPress={() => router.push('/shop')}
+                                />
+                                <QuickAccessItem
+                                    icon={PackageOpen}
+                                    label="Orders"
+                                    color="bg-orange-500"
+                                    onPress={() => router.push('/shop/orders')}
+                                />
+                            </>
+                        )}
                     </View>
                 </View>
 
                 {/* Recent Activity */}
                 <View className="mb-8">
                     <View className="flex-row justify-between items-center mb-4">
-                        <Text className="text-lg font-bold text-gray-800">Recent Activity</Text>
+                        <Text className="text-lg font-bold text-gray-800">Recent Diagnoses</Text>
                         <TouchableOpacity onPress={() => router.push('/diagnosis/history')}>
                             <Text className="text-primary font-semibold">See All</Text>
                         </TouchableOpacity>

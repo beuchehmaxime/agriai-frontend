@@ -57,7 +57,7 @@ export const useCreateOrder = () => {
     const { isConnected } = useNetwork();
 
     return useMutation({
-        mutationFn: async (orderData: { items: { productId: string, quantity: number }[] }) => {
+        mutationFn: async (orderData: { items: { productId: string, quantity: number }[], paymentMethod: string, phoneNumber?: string }) => {
             if (!isConnected) {
                 throw new Error('OFFLINE');
             }
