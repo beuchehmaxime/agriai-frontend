@@ -105,6 +105,7 @@ export default function ApplyExpertScreen() {
                     <TextInput
                         className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-gray-800"
                         placeholder="e.g., 5 years"
+                        placeholderTextColor="#00000066"
                         value={form.experience}
                         onChangeText={(t) => setForm({ ...form, experience: t })}
                     />
@@ -117,6 +118,7 @@ export default function ApplyExpertScreen() {
                     <TextInput
                         className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-gray-800 h-24"
                         placeholder="Describe your degrees and expertise"
+                        placeholderTextColor="#00000066"
                         multiline
                         textAlignVertical="top"
                         value={form.qualifications}
@@ -131,6 +133,7 @@ export default function ApplyExpertScreen() {
                     <TextInput
                         className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-gray-800"
                         placeholder="e.g., BSc. Agriculture, Certified Agronomist"
+                        placeholderTextColor="#00000066"
                         value={form.certificateType}
                         onChangeText={(t) => setForm({ ...form, certificateType: t })}
                     />
@@ -144,6 +147,7 @@ export default function ApplyExpertScreen() {
                         <TextInput
                             className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-gray-800"
                             placeholder="University name"
+                            placeholderTextColor="#00000066"
                             value={form.institution}
                             onChangeText={(t) => setForm({ ...form, institution: t })}
                         />
@@ -155,6 +159,7 @@ export default function ApplyExpertScreen() {
                         <TextInput
                             className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-gray-800"
                             placeholder="YYYY"
+                            placeholderTextColor="#00000066"
                             keyboardType="numeric"
                             value={form.obtainedYear}
                             onChangeText={(t) => setForm({ ...form, obtainedYear: t })}

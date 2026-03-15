@@ -74,7 +74,7 @@ export default function LoginScreen() {
                     <View className="space-y-4 gap-4">
                         <Input
                             label="Phone Number"
-                            placeholder="+237 600 000 000"
+                            placeholder="670000000"
                             value={formData.phoneNumber}
                             onChangeText={(text) => setFormData({ ...formData, phoneNumber: text })}
                             keyboardType="phone-pad"

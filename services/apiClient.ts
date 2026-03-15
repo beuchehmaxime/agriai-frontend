@@ -60,6 +60,15 @@ apiClient.interceptors.response.use(
             console.error('[API Error Detail]', errorMessage);
         } else {
             console.error(`[API Error] ${error.response.status} ${error.config.url}:`, error.response.data);
+            
+            // Handle "User not found" or unauthorized errors by logging out
+            const data = error.response.data;
+            const message = data?.message || data?.error || '';
+            
+            if (error.response.status === 401 && (message.includes('User not found') || message.includes('Unauthorized'))) {
+                console.warn('[API] Unauthorized access or User not found. Triggering logout...');
+                useUserStore.getState().logout();
+            }
         }
         return Promise.reject(error);
     }

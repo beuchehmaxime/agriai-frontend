@@ -95,14 +95,18 @@ export default function WalletScreen() {
                     <Text className="text-sm font-medium text-gray-700 mb-1">Amount (XAF)</Text>
                     <TextInput 
                         className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900" 
-                        value={amount} onChangeText={setAmount} placeholder="e.g. 5000" keyboardType="numeric" />
+                        value={amount} onChangeText={setAmount} placeholder="e.g. 5000" 
+                        placeholderTextColor="#00000066"
+                        keyboardType="numeric" />
                 </View>
 
                 <View className="mb-6">
                     <Text className="text-sm font-medium text-gray-700 mb-1">Phone Number</Text>
                     <TextInput 
                         className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900" 
-                        value={phoneNumber} onChangeText={setPhoneNumber} placeholder="e.g. 6XXXXXXX" keyboardType="phone-pad" />
+                        value={phoneNumber} onChangeText={setPhoneNumber} placeholder="e.g. 6XXXXXXX" 
+                        placeholderTextColor="#000000"
+                        keyboardType="phone-pad" />
                 </View>
 
                 <Button 

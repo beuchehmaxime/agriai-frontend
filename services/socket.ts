@@ -26,6 +26,10 @@ class SocketService {
 
         this.socket.on('connect_error', (err) => {
             console.error('Socket connection error:', err.message);
+            if (err.message.includes('User not found')) {
+                const { useUserStore } = require('../store/userStore');
+                useUserStore.getState().logout();
+            }
         });
     }
 

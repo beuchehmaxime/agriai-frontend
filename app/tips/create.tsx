@@ -82,6 +82,7 @@ export default function CreateTipScreen() {
                     <TextInput
                         className="bg-gray-50 p-4 rounded-2xl mb-6 text-gray-900 font-medium border border-gray-100"
                         placeholder="E.g., How to detect early maize disease"
+                        placeholderTextColor="#00000066"
                         value={title}
                         onChangeText={setTitle}
                         maxLength={100}
@@ -91,6 +92,7 @@ export default function CreateTipScreen() {
                     <TextInput
                         className="bg-gray-50 p-4 rounded-2xl mb-6 text-gray-900 border border-gray-100 leading-relaxed"
                         placeholder="Share your agricultural knowledge here..."
+                        placeholderTextColor="#00000066"
                         value={content}
                         onChangeText={setContent}
                         multiline

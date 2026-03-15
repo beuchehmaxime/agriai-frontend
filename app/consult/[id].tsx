@@ -201,6 +201,7 @@ export default function ChatScreen() {
                     <TextInput
                         className="flex-1 bg-gray-100 rounded-full px-4 py-3 text-gray-800"
                         placeholder="Type a message..."
+                        placeholderTextColor="#00000066"
                         value={text}
                         onChangeText={setText}
                         onSubmitEditing={() => sendMessage()}

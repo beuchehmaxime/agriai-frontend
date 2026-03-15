@@ -34,7 +34,7 @@ export default function Input({ value, onChangeText, placeholder, label, keyboar
                         "bg-white border border-gray-200 rounded-xl px-4 py-3 text-lg text-gray-800 focus:border-primary focus:border-2",
                         secureTextEntry && "pr-12"
                     )}
-                    placeholderTextColor="#9CA3AF"
+                    placeholderTextColor="#00000066"
                 />
                 {secureTextEntry && (
                     <TouchableOpacity

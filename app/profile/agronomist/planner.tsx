@@ -102,14 +102,18 @@ export default function PlannerScreen() {
                     <Text className="text-sm font-medium text-gray-700 mb-1">Title</Text>
                     <TextInput 
                         className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900" 
-                        value={title} onChangeText={setTitle} placeholder="e.g. Bronze Hourly" />
+                        value={title} onChangeText={setTitle} placeholder="e.g. Bronze Hourly" 
+                        placeholderTextColor="#00000066"
+                        />
                 </View>
                 
                 <View className="mb-4">
                     <Text className="text-sm font-medium text-gray-700 mb-1">Description</Text>
                     <TextInput 
                         className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900" 
-                        value={description} onChangeText={setDescription} placeholder="Description..." multiline />
+                        value={description} onChangeText={setDescription} placeholder="Description..." 
+                        placeholderTextColor="#00000066"
+                        multiline />
                 </View>
 
                 <View className="flex-row gap-4 mb-4">
@@ -131,7 +135,9 @@ export default function PlannerScreen() {
                     <Text className="text-sm font-medium text-gray-700 mb-1">Price (XAF)</Text>
                     <TextInput 
                         className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900" 
-                        value={price} onChangeText={setPrice} placeholder="e.g. 5000" keyboardType="numeric" />
+                        value={price} onChangeText={setPrice} placeholder="e.g. 5000" 
+                        placeholderTextColor="#00000066"
+                        keyboardType="numeric" />
                 </View>
 
                 {type === 'HOURLY' && (
@@ -139,7 +145,9 @@ export default function PlannerScreen() {
                         <Text className="text-sm font-medium text-gray-700 mb-1">Duration (Hours)</Text>
                         <TextInput 
                             className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900" 
-                            value={durationHours} onChangeText={setDurationHours} placeholder="e.g. 1" keyboardType="numeric" />
+                            value={durationHours} onChangeText={setDurationHours} placeholder="e.g. 1" 
+                            placeholderTextColor="#000000"
+                            keyboardType="numeric" />
                     </View>
                 )}
 

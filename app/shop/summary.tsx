@@ -164,6 +164,7 @@ export default function SummaryScreen() {
                                 onChangeText={setMomoNumber}
                                 keyboardType="phone-pad"
                                 placeholder="e.g. 67X XXX XXX"
+                                placeholderTextColor="#00000066"
                             />
                         </View>
                     )}
@@ -191,6 +192,7 @@ export default function SummaryScreen() {
                                 onChangeText={setMomoNumber}
                                 keyboardType="phone-pad"
                                 placeholder="e.g. 65X XXX XXX"
+                                placeholderTextColor="#00000066"
                             />
                         </View>
                     )}

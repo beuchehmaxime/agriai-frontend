@@ -59,7 +59,7 @@ export default function ShopScreen() {
                         <TextInput
                             placeholder="Search fertilizers, seeds, pesticides..."
                             className="flex-1 ml-3 py-1 text-base font-medium text-gray-800"
-                            placeholderTextColor="#9CA3AF"
+                            placeholderTextColor="#00000066"
                             value={searchQuery}
                             onChangeText={setSearchQuery}
                         />

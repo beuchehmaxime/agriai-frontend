@@ -103,6 +103,7 @@ export default function CheckoutScreen() {
                         onChangeText={(t) => setShippingDetails({ ...shippingDetails, fullName: t })}
                         editable={!useProfileData}
                         placeholder="John Doe"
+                        placeholderTextColor="#00000066"
                     />
 
                     <Text className="text-sm font-bold text-gray-700 mb-2">Contact Phone</Text>
@@ -113,6 +114,7 @@ export default function CheckoutScreen() {
                         editable={!useProfileData}
                         keyboardType="phone-pad"
                         placeholder="+237 6XX XXX XXX"
+                        placeholderTextColor="#00000066"
                     />
 
                     <Text className="text-sm font-bold text-gray-700 mb-2">Delivery Address (Required)</Text>
@@ -121,6 +123,7 @@ export default function CheckoutScreen() {
                         value={shippingDetails.address}
                         onChangeText={(t) => setShippingDetails({ ...shippingDetails, address: t })}
                         placeholder="Street, Quarter, Landmarks..."
+                        placeholderTextColor="#00000066"
                         multiline
                     />
 
@@ -130,6 +133,7 @@ export default function CheckoutScreen() {
                         value={shippingDetails.city}
                         onChangeText={(t) => setShippingDetails({ ...shippingDetails, city: t })}
                         placeholder="e.g. Yaoundé"
+                        placeholderTextColor="#00000066"
                     />
 
                     <Text className="text-sm font-bold text-gray-700 mb-2">Delivery Notes (Optional)</Text>
@@ -138,6 +142,7 @@ export default function CheckoutScreen() {
                         value={shippingDetails.notes}
                         onChangeText={(t) => setShippingDetails({ ...shippingDetails, notes: t })}
                         placeholder="Leave at front gate..."
+                        placeholderTextColor="#00000066"
                         multiline
                     />
                 </View>
@@ -148,7 +153,7 @@ export default function CheckoutScreen() {
                     className={`w-full py-4 rounded-2xl shadow-lg mt-2 mb-10 ${!shippingDetails.address || !shippingDetails.city ? 'bg-gray-300' : 'bg-primary shadow-green-200'
                         }`}
                 >
-                    <Text className="text-white text-center font-bold text-lg">Continue to Summary</Text>
+                    <Text className="text-white text-center font-bold text-lg">Continue to Payment</Text>
                 </TouchableOpacity>
             </KeyboardAwareScrollView>
         </SafeAreaView>

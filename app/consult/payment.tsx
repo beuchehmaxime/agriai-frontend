@@ -105,6 +105,7 @@ export default function PaymentScreen() {
                         value={phoneNumber} 
                         onChangeText={setPhoneNumber} 
                         placeholder={provider === 'MTN_MOMO' ? 'e.g. 67XXXXXXX' : 'e.g. 69XXXXXXX'} 
+                        placeholderTextColor="#00000066"
                         keyboardType="phone-pad" 
                     />
                     <Text className="text-xs text-gray-400 mt-2">

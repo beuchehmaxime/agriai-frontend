@@ -73,6 +73,10 @@ export const useUserStore = create<UserState>((set) => ({
         set({ userId: null, phoneNumber: null, token: null, userType: null, name: null, email: null });
         await clearUserSession();
 
+        // Clear cart on logout
+        const { useCartStore } = require('./useCartStore');
+        useCartStore.getState().clearCart();
+
         const { socketService } = require('../services/socket');
         socketService.disconnect();
     },
